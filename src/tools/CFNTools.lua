@@ -114,7 +114,7 @@ function Batchifier:forward(data, batchSize)
       local stop  = nFrame
 
       if self.appenderIn then
-         self.appenderIn:prepareInput(denseInfo[{{1, #inputs},{}}], {table.unpack(sparseInfo, 1, #inputs)})
+         self.appenderIn:prepareInput(denseInfo[{{1, #inputs},{}}], {unpack(sparseInfo, 1, #inputs)})
       end
 
       outputs[{{start,stop},{}}] = self.network:forward(inputs)

@@ -288,10 +288,10 @@ end
 
 -- remaining data for minibatch
 if #inputs > 0 then
-  local _targets = {table.unpack(targets, 1, #inputs)} --retrieve a subset of targets
+  local _targets = {unpack(targets, 1, #inputs)} --retrieve a subset of targets
 
   if appenderIn then
-    local _sparseMetadata = {table.unpack(sparseMetadata, 1, #inputs)}
+    local _sparseMetadata = {unpack(sparseMetadata, 1, #inputs)}
     local _denseMetadata =  denseMetadata[{{1, #inputs},{}}]
 
     appenderIn:prepareInput(_denseMetadata, _sparseMetadata)
