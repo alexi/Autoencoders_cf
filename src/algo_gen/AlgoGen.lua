@@ -141,8 +141,8 @@ function AlgoGen:Learn()
 
 
       -- Create two sets containing the best genes 
-      local S1 = { unpack(genes,          1, noBest) }
-      local S2 = { unpack(genes, noBest + 1, noBest + noCross) }
+      local S1 = { table.unpack(genes,          1, noBest) }
+      local S2 = { table.unpack(genes, noBest + 1, noBest + noCross) }
 
 
       -- Copy Best genes

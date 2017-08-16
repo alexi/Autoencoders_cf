@@ -219,10 +219,10 @@ function  AutoEncoderTrainer:Test(sgdOpt)
 
       -- remaining data for minibatch
       if #input > 0 then
-         local _targets = { unpack(target, 1, #input)} --retrieve a subset of targets
+         local _targets = { table.unpack(target, 1, #input)} --retrieve a subset of targets
          
          if appenderIn then
-            local _sparseMetadata = {unpack(sparseMetadata, 1, #input)}
+            local _sparseMetadata = {table.unpack(sparseMetadata, 1, #input)}
             local _denseMetadata =  denseMetadata[{{1, #input},{}}] 
             
             appenderIn:prepareInput(_denseMetadata, _sparseMetadata)
