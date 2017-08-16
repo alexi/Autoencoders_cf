@@ -36,6 +36,7 @@ cmd:option('-gpu'            , 1                                  , 'use gpu. CP
 cmd:option('-save'           , ''                                 , "Store the final network in an external file")
 cmd:text()
 
+unpack = table.unpack
 
 local params = cmd:parse(arg)
 
