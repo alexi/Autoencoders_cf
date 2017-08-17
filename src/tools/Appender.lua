@@ -29,8 +29,13 @@ function AppenderOut:updateOutput(input)
    self.output = self.output:typeAs(input)
 
    if inputToAppend ~= nil then
+      print("output:",self.output:size())
+      print("input",input:size())
+      print("append",inputToAppend:size())
+      -- print(torch.cat(input, inputToAppend, 2))
       --self.output:resize(input:size(1), input:size(2) + inputToAppend:size(2))
-      torch.cat(self.output, input, inputToAppend, 2)
+      v = torch.cat(self.output, input, inputToAppend, 2)
+      return v
    else
       self.output = input
    end

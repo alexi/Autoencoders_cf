@@ -1,8 +1,6 @@
 #!/bin/bash
 # Upgrade ubuntu
 sudo apt-get -y update upgrade dist-upgrade autoremove clean
-lsb_release -a # Checking Ubuntu version
-# Serch for a file: sudo find ./ | grep libgflags.so.2.2
 
 # Install CUDA
 sudo apt-get install -y build-essential
@@ -39,13 +37,17 @@ sudo cp cuda/include/*.h /usr/local/cuda/include
 sudo cp cuda/lib64/*.so* /usr/local/cuda/lib64
 rm cudnn-8.0-linux-x64-v7.tgz 
 
-# Install Torch
+# Install Torch -- http://torch.ch/docs/getting-started.html
 git clone https://github.com/torch/distro.git ~/torch --recursive
-cd ~/torch; bash install-deps;
+cd ~/torch
 TORCH_LUA_VERSION=LUA52 ./install.sh
 source ~/.bashrc # not needed?
 
-sudo apt install -y luarocks
+# cd ~/torch; bash install-deps;
+# TORCH_LUA_VERSION=LUA52 ./install.sh
+
+
+# sudo apt install -y luarocks
 # Install all reqd torch packages
 luarocks install cutorch # CUDA support for torch
  # CUDA neural net?
@@ -61,3 +63,5 @@ luarocks install optim
 
 #xlua
 torch-rocks install xlua
+
+cd ~/ && git clone https://github.com/dinosaurcop/Autoencoders_cf.git

@@ -92,5 +92,8 @@ function LoadData(file, params)
 
    print("Data was successfully preloaded...")
 
+   if params.loadLookupTables then
+      return train, test, info, data.lookup
+   end
    return train, test, info
 end

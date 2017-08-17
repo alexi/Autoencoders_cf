@@ -33,7 +33,8 @@ function DataLoader:LoadData(ratioTraining, conf)
    self:LoadMetaV(conf)
    
    print("Step 5 : Saving data in torch format...")
-   local data = {train = self.train, test = self.test}
+   lookup = {U = self.userHash, V = self.itemHash}
+   local data = {train = self.train, test = self.test, lookup=lookup}
    torch.save(conf.out, data)
 
    print("Done...")

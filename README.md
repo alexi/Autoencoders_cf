@@ -36,6 +36,18 @@ th main.lua  -file ../data/ml-10M100K/movieLens-10M.t7 -conf ../conf/conf.movieL
 th computeMetrics.lua -file ../data/ml-10M100K/movieLens-10M.t7 -network network.t7 -type V -gpu 1
 ```
 
+```
+git clone git@github.com:fstrub95/Autoencoders_cf.git
+cd Autoencoders_cf
+cd data
+wget http://files.grouplens.org/datasets/movielens/ml-1M.zip
+unzip ml-1M.zip 
+cd ../src
+th data.lua  -ratings ../data/ml-1m/ratings.dat -metaItem ../data/ml-1m/movies.dat -out ../data/ml-1m/movieLens-1M.t7 -fileType movieLens -ratio 0.9
+th main.lua  -file ../data/ml-1M/movieLens-1M.t7 -conf ../conf/conf.movieLens.1M.V.lua  -save network.t7 -type V -meta 1 -gpu 1
+th computeMetrics.lua -file ../data/ml-1M/movieLens-1M.t7 -network network.t7 -type V -gpu 1
+```
+
 Your network is ready!
 
 (Average time ~25min)
