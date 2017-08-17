@@ -84,7 +84,6 @@ function TrainNetwork(train, test, info, config)
    --Step 2 : train networks  - Stacked Autoencoders
    for noLayer = 1, #confLayers do
       local confLayer = confLayers[noLayer]
-      noLayer = noLayer + 1
       for k = noLayer, 1, -1 do 
 
          --Retrieve configuration      
