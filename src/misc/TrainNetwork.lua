@@ -13,7 +13,7 @@ function TrainNetwork(train, test, info, config)
    local confLayers = {}
    for key, confLayer in pairs(config) do
          if string.starts(key, "layer") then
-            local lnum = tonumber(string.sub(key, 5))
+            local lnum = tonumber(string.sub(key, 6))
             confLayers[lnum] = confLayer
             bottleneck[lnum] = confLayer.layerSize
          end
@@ -152,7 +152,7 @@ function TrainNetwork(train, test, info, config)
          
          finalNetwork = network
          end
-         
+
       end
 
    end
