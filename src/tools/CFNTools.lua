@@ -85,7 +85,7 @@ function Batchifier:forward(data, batchSize)
    local cursor = 0
    for k, input in pairs(data) do
 
-      inputs[i]  = input   
+      inputs[i]  = input
       
       if self.appenderIn then
           denseInfo[i]  = self.info[k].full
@@ -98,7 +98,8 @@ function Batchifier:forward(data, batchSize)
       if #inputs == batchSize then
          local start =  cursor   *batchSize + 1
          local stop  = (cursor+1)*batchSize
-
+         if stop > #outputs then stop = #outputs end
+         
          if self.appenderIn then
             self.appenderIn:prepareInput(denseInfo,sparseInfo)
          end
