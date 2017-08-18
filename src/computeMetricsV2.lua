@@ -246,7 +246,7 @@ local sparseMetadata = {}
 
 ------------MAIN!!!
 local reverseIndex = {}
-
+local usersSkipped = 0
 --for k, input in pairs(train) do
 for kk = 1, size do
   local k = sortedIndex[kk]
@@ -362,6 +362,8 @@ for kk = 1, size do
       i = i + 1
     end
 
+  else
+    usersSkipped = usersSkipped + 1
   end
 end
 
@@ -467,7 +469,7 @@ function fllscore(tp, fp, fn, tn, misses, beta)
   print("Log-Likelihood Score:\t" .. ll .. "\nTanh(llscore/sqrt(N)):\t" .. lltanh .. "\n\n\n")
 end
 
-print("numUserHitsCalculated: " .. numUserHitsCalculated)
+print("numUserHitsCalculated: " .. numUserHitsCalculated .. "\nnumUsersSkipped:" .. usersSkipped)
 for k, v in pairs(f1Info) do
   print("Accuracy Measure N:" .. k .. " -------------------")
   fllscore(v.tp, v.fp, v.fn, v.tn, v.misses, 1)
