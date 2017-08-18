@@ -106,7 +106,7 @@ local batchSize = 20
 local curRatio  = ratioStep
 local rmse, mae = 0,0
 
-local f1Threshold = 3.0
+local f1Threshold = 0.0
 local f1Ns = {5,10,15,20,30}
 local f1Info = {}
 for i = 1, #f1Ns do
@@ -198,7 +198,7 @@ end
 
 function calculateHits(nTargets, itemScores, targetItems, N)
   -- print("calculateHits called")
-  local sumA, sumB, sumAB = 0
+  local sumA, sumB, sumAB = 0, 0, 0
   for i = 1, itemScores:size(1) do
     if i <= N then
       sumA = sumA + 1
@@ -268,7 +268,7 @@ for kk = 1, size do
 
     hitTargets[i] = {}
     for ti = 1, targets[i]:size(1) do
-      print(targets[i])
+      --print(targets[i])
       if targets[i][ti][2] >= f1Threshold then
         hitTargets[i][targets[i][ti][1]] = true
       end
@@ -284,7 +284,7 @@ for kk = 1, size do
     
     noSample         = noSample         + target:size(1)
     noSampleInterval = noSampleInterval + target:size(1)
-    i = i + 1
+    --i = i + 1
 
 
 
@@ -302,15 +302,15 @@ for kk = 1, size do
         local urecs = nnsparse.DynamicSparseTensor(10000)
         for ii = 1, outputs[ui]:size(1) do
           itemid = ii
-          if hidden[itemid] ~= nil then
+          if hiddens[ui][itemid] ~= nil then
             urecs:append(torch.Tensor{itemid, outputs[ui][ii]})
           end
         end
         urecs = urecs:build():ssort(true)
         for fi = 1, #f1Ns do
           local f1n = f1Ns[fi]
-	  print(hitTargets[i])
-          local tp, fp, fn, tn = calculateHits(matrixSize[targetType], urecs, hitTargets[i], f1n)
+	  -- print(hitTargets[i])
+          local tp, fp, fn, tn = calculateHits(matrixSize[targetType], urecs, hitTargets[ui], f1n)
           f1Info[f1n].tp = f1Info[f1n].tp + tp
           f1Info[f1n].fp = f1Info[f1n].fp + fp
           f1Info[f1n].fn = f1Info[f1n].fn + fn
@@ -352,6 +352,8 @@ for kk = 1, size do
       computeTranspose(outputs, targets, reverseIndex)
       reverseIndex = {}
 
+    else
+      i = i + 1
     end
 
   end
@@ -374,14 +376,14 @@ if #inputs > 0 then
     local urecs = nnsparse.DynamicSparseTensor(10000)
     for ii = 1, outputs[ui]:size(1) do
       itemid = ii
-      if hidden[itemid] ~= nil then
+      if hiddens[ui][itemid] ~= nil then
         urecs:append(torch.Tensor{itemid, outputs[ui][ii]})
       end
     end
     urecs = urecs:build():ssort(true)
     for fi = 1, #f1Ns do
       local f1n = f1Ns[fi]
-      local tp, fp, fn, tn = calculateHits(matrixSize[targetType], urecs, hitTargets[i], f1n)
+      local tp, fp, fn, tn = calculateHits(matrixSize[targetType], urecs, hitTargets[ui], f1n)
       f1Info[f1n].tp = f1Info[f1n].tp + tp
       f1Info[f1n].fp = f1Info[f1n].fp + fp
       f1Info[f1n].fn = f1Info[f1n].fn + fn
@@ -417,7 +419,7 @@ print("Final MAE : " .. mae)
 computeTranposeRatio(transposeError)
 
 function fscore(tp, fp, fn, tn, beta)
-  local p, r, f = 0.0
+  local p, r, f = 0.0,0.0,0.0
   if tp ~= 0 then
     p = tp/(tp+fp)
     r = tp/(tp+fn)
