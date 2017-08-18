@@ -25,7 +25,7 @@ function movieLensLoader:LoadRatings(conf)
       local userIndex = self:getUserIndex(userId)
 
       sortedRatings:append(torch.Tensor{size, timestamp})
-      ratings[i] = {u = userIndex, i = itemIndex, r = rating}
+      ratings[size] = {u = userIndex, i = itemIndex, r = rating}
     end
     sortedRatings = sortedRatings:build():ssort()
     local sortedIndex = sortedRatings[{{},1}]
