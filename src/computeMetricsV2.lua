@@ -107,10 +107,11 @@ local curRatio  = ratioStep
 local rmse, mae = 0,0
 
 local f1Threshold = 0.0
-local f1Ns = {5,10,15,20,30}
+-- local f1Ns = {5,10,15,20,30}
+local f1Ns = {20}
 local f1Info = {}
 for i = 1, #f1Ns do
-  f1Info[f1Ns[i]] = {tp=0,fp=0,tn=0,fn=0}
+  f1Info[f1Ns[i]] = {tp=0,fp=0,tn=0,fn=0,misses=0}
 end
 
 
@@ -195,10 +196,14 @@ function computeTranposeRatio(transposeError)
 
 end
 
+local numUserHitsCalculated = 0
 
 function calculateHits(nTargets, itemScores, targetItems, N)
+  numUserHitsCalculated = numUserHitsCalculated + 1
   -- print("calculateHits called")
   local sumA, sumB, sumAB = 0, 0, 0
+  local misses = 0
+  if itemScores:size(1) < N then misses = N - itemScores:size(1) end
   for i = 1, itemScores:size(1) do
     if i <= N then
       sumA = sumA + 1
@@ -219,7 +224,7 @@ function calculateHits(nTargets, itemScores, targetItems, N)
   local fp = sumA - sumAB
   local fn = sumB - sumAB
   local tn = nTargets - fn - fp - tp 
-  return tp, fp, fn, tn
+  return tp, fp, fn, tn, misses
 end
 
 
@@ -310,11 +315,12 @@ for kk = 1, size do
         for fi = 1, #f1Ns do
           local f1n = f1Ns[fi]
 	  -- print(urecs)
-          local tp, fp, fn, tn = calculateHits(matrixSize[targetType], urecs, hitTargets[ui], f1n)
+          local tp, fp, fn, tn, misses = calculateHits(matrixSize[targetType], urecs, hitTargets[ui], f1n)
           f1Info[f1n].tp = f1Info[f1n].tp + tp
           f1Info[f1n].fp = f1Info[f1n].fp + fp
           f1Info[f1n].fn = f1Info[f1n].fn + fn
-          f1Info[f1n].tn = f1Info[f1n].tp + tn
+          f1Info[f1n].tn = f1Info[f1n].tn + tn
+          f1Info[f1n].misses = f1Info[f1n].misses + misses
         end
       end
 
@@ -383,11 +389,12 @@ if #inputs > 0 then
     urecs = urecs:build():ssort(true)
     for fi = 1, #f1Ns do
       local f1n = f1Ns[fi]
-      local tp, fp, fn, tn = calculateHits(matrixSize[targetType], urecs, hitTargets[ui], f1n)
+      local tp, fp, fn, tn, misses = calculateHits(matrixSize[targetType], urecs, hitTargets[ui], f1n)
       f1Info[f1n].tp = f1Info[f1n].tp + tp
       f1Info[f1n].fp = f1Info[f1n].fp + fp
       f1Info[f1n].fn = f1Info[f1n].fn + fn
-      f1Info[f1n].tn = f1Info[f1n].tp + tn
+      f1Info[f1n].tn = f1Info[f1n].tn + tn
+      f1Info[f1n].misses = f1Info[f1n].misses + misses
     end
   end
 
@@ -448,10 +455,10 @@ function llscore(tp, fp, fn, tn)
   return x, score
 end
 
-function fllscore(tp, fp, fn, tn, beta)
+function fllscore(tp, fp, fn, tn, misses, beta)
   local p,r,f = fscore(tp, fp, fn, tn, beta)
   local ll, lltanh = llscore(tp, fp, fn, tn)
-  print("True Positives:\t" .. tp .."\nFalse Positives: " .. fp .. "\nFalse Negatives:\t" .. fn .. "\nTrue Negatives:\t" .. tn)
+  print("True Positives:\t\t" .. tp .."\nFalse Positives:\t" .. fp .. "\nFalse Negatives:\t" .. fn .. "\nTrue Negatives:\t" .. tn .. "\nMisses:\t" .. misses)
 
   print("\nF" .. beta .. "-Score\n--------\n")
   print("Precision:\t" .. p .. "\nRecall:\t\t" .. r .. "\nF" .. beta .. "-Score:\t" .. f .. "\n")
@@ -460,9 +467,10 @@ function fllscore(tp, fp, fn, tn, beta)
   print("Log-Likelihood Score:\t" .. ll .. "\nTanh(llscore/sqrt(N)):\t" .. lltanh .. "\n\n\n")
 end
 
+print("numUserHitsCalculated: " .. numUserHitsCalculated)
 for k, v in pairs(f1Info) do
   print("Accuracy Measure N:" .. k .. " -------------------")
-  fllscore(v.tp, v.fp, v.fn, v.tn, 1)
+  fllscore(v.tp, v.fp, v.fn, v.tn, v.misses, 1)
 end
 
 
