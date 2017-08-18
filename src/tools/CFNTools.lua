@@ -73,11 +73,12 @@ function Batchifier:forward(data, batchSize)
    local inputs   = {}
    local outputs  = data[1].new(nFrame, self.outputSize) 
    
+   local denseInfo = {}
+   local sparseInfo = {}
    if self.appenderIn then
-      local denseInfo  = data[1].new(batchSize, self.info.metaDim):zero()
-      local sparseInfo = {}
+      denseInfo  = data[1].new(batchSize, self.info.metaDim):zero()
    end
-   
+
    assert(torch.type(data) == "table")
 
    local i      = 1
