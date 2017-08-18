@@ -32,6 +32,7 @@ cmd:option('-fileType'       , "movieLens"                        , 'The data fi
 cmd:option('-out'            , "./movieLens-1M.t7"                , 'The data file format (movieLens/douban/classic)')
 cmd:option('-ratio'          , 0.9                                , 'The training ratio')
 cmd:option('-seed'           , 0                                  , 'seed')
+cmd:option('-split'           , 'rand'                                  , 'The data split type (time/rand)')
 cmd:text()
 
 

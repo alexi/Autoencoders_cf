@@ -9,9 +9,35 @@ function movieLensLoader:LoadRatings(conf)
    -- step 3 : load ratings
    local ratesfile = io.open(conf.ratings, "r")
 
- 
+  if conf.split == "time" then
+    local sortedRatings = nnsparse.DynamicSparseTensor(10000)    
+    local ratings = {}
+    local size = 0
+    for line in ratesfile:lines() do
+      size = size + 1
+      local userIdStr, movieIdStr, ratingStr, timeStr = line:match('(%d+)::(%d+)::(%d%.?%d?)::(%d+)')
+      local userId  = tonumber(userIdStr)
+      local itemId  = tonumber(movieIdStr)
+      local rating  = preprocess(tonumber(ratingStr))
+      local timestamp = tonumber(timeStr)
+
+      local itemIndex = self:getItemIndex(itemId)
+      local userIndex = self:getUserIndex(userId)
+
+      sortedRatings:append(torch.Tensor{size, timestamp})
+      ratings[i] = {u = userIndex, i = itemIndex, r = rating}
+    end
+    sortedRatings = sortedRatings:build():ssort()
+    local sortedIndex = sortedRatings[{{},1}]
+
+    for i = 1, #ratings do
+      local k = sortedIndex[i]
+      self:AppendOneRating((i+0.0)/(size+0.0), ratings[k].u, ratings[k].i, ratings[k].r)
+    end
+
+  else
    -- Step 1 : Retrieve movies'scores...th
-   for line in ratesfile:lines() do
+    for line in ratesfile:lines() do
 
       local userIdStr, movieIdStr, ratingStr = line:match('(%d+)::(%d+)::(%d%.?%d?)::(%d+)')
 
@@ -24,10 +50,11 @@ function movieLensLoader:LoadRatings(conf)
 
       rating = preprocess(rating)
 
-      self:AppendOneRating(userIndex, itemIndex, rating)
+      self:AppendOneRating(torch.uniform(), userIndex, itemIndex, rating)
 
-   end
-   ratesfile:close()
+    end
+  end
+  ratesfile:close()
 
 end
 

@@ -44,10 +44,10 @@ end
 
 
 -- Protected Method (helper)
-function DataLoader:AppendOneRating(userId, itemId, rating)
+function DataLoader:AppendOneRating(p, userId, itemId, rating)
    
    --store the rating in either the training or testing set
-   if torch.uniform() < self.__ratioTraining then
+   if p < self.__ratioTraining then
       self:appendTrain(userId, itemId, rating)
    else
       self:appendTest(userId, itemId, rating)

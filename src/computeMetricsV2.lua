@@ -406,8 +406,6 @@ if #inputs > 0 then
   
 end
 
-
-
 rmse = math.sqrt(rmse/noSample) * 2 
 mae  = mae/noSample * 2
 
@@ -455,14 +453,15 @@ function fllscore(tp, fp, fn, tn, beta)
   local ll, lltanh = llscore(tp, fp, fn, tn)
   print("True Positives:\t" .. tp .."\nFalse Positives: " .. fp .. "\nFalse Negatives:\t" .. fn .. "\nTrue Negatives:\t" .. tn)
 
-  print("F" .. beta .. "-Score\n--------\n")
-  print("Precision:\t" .. p .. "\nRecall:\t" .. r .. "\nF" .. beta .. "-Score:\t" .. f .. "\n\n")
+  print("\nF" .. beta .. "-Score\n--------\n")
+  print("Precision:\t" .. p .. "\nRecall:\t\t" .. r .. "\nF" .. beta .. "-Score:\t" .. f .. "\n")
 
   print("Log-Likelihood\n--------------\n")
-  print("Log-Likelihood Score:\t" .. ll .. "\nTanh(llscore/sqrt(N)):\t" .. lltanh .. "\n\n")
+  print("Log-Likelihood Score:\t" .. ll .. "\nTanh(llscore/sqrt(N)):\t" .. lltanh .. "\n\n\n")
 end
 
 for k, v in pairs(f1Info) do
+  print("Accuracy Measure N:" .. k .. " -------------------")
   fllscore(v.tp, v.fp, v.fn, v.tn, 1)
 end
 
