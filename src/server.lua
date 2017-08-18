@@ -50,11 +50,11 @@ end
 local ratioStep = params.ratioStep
 
 --Load lookup tables
-params.loadLookupTables = true
+params.loadFull = true
 
 --Load data
 print("Loading data...")
-local train, test, info, lookup = LoadData(params.file, params)
+local train, test, info, matrixSize, lookup = LoadData(params.file, params)
 
 --Seed target type index:name table
 targetType = "U"
@@ -122,7 +122,7 @@ function getUserRecs(uid)
   local input  = train[k]
   local target = test[k]
   local hidden = {}
-  for k, oneTrain in pairs(train) do
+  for k, oneTrain in pairs(input) do
     for i = 1, oneTrain:size(1) do
       hidden[oneTrain[i][1]] = true
     end
@@ -152,7 +152,7 @@ function getUserRecs(uid)
 
     -- Recs gen
     local urecs = nnsparse.DynamicSparseTensor(10000)
-    for ii = 1, outputs[ui].size do
+    for ii = 1, outputs[ui]:size(1) do
       itemid = ii
       if hidden[itemid] ~= nil then
         urecs:append(torch.Tensor{itemid, outputs[ui][ii]})

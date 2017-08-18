@@ -15,7 +15,7 @@ function LoadData(file, params)
    local train   = data.train[type].data
    local test    = data.test [type].data
    local info    = data.train[type].info
-   
+   local matrixSize = {U = data.train.U.info.size, V = data.train.V.info.size}
    print("")
    print("Users loaded      : " .. data.train.U.info.size)
    print("Items loaded      : " .. data.train.V.info.size)
@@ -92,8 +92,8 @@ function LoadData(file, params)
 
    print("Data was successfully preloaded...")
 
-   if params.loadLookupTables then
-      return train, test, info, data.lookup
+   if params.loadFull then
+      return train, test, info, matrixSize, data.lookup
    end
    return train, test, info
 end
