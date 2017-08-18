@@ -21,18 +21,17 @@ function movieLensLoader:LoadRatings(conf)
       local rating  = preprocess(tonumber(ratingStr))
       local timestamp = tonumber(timeStr)
 
-      local itemIndex = self:getItemIndex(itemId)
-      local userIndex = self:getUserIndex(userId)
-
       sortedRatings:append(torch.Tensor{size, timestamp})
-      ratings[size] = {u = userIndex, i = itemIndex, r = rating}
+      ratings[size] = {u = userId, i = itemId, r = rating}
     end
     sortedRatings = sortedRatings:build():ssort()
     local sortedIndex = sortedRatings[{{},1}]
 
     for i = 1, #ratings do
       local k = sortedIndex[i]
-      self:AppendOneRating((i+0.0)/(size+0.0), ratings[k].u, ratings[k].i, ratings[k].r)
+      local itemIndex = self:getItemIndex(ratings[k].i)
+      local userIndex = self:getUserIndex(ratings[k].u)
+      self:AppendOneRating((i+0.0)/(size+0.0), userIndex, itemIndex, ratings[k].r)
     end
 
   else
