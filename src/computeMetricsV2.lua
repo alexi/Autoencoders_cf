@@ -107,7 +107,7 @@ local curRatio  = ratioStep
 local rmse, mae = 0,0
 
 local f1Threshold = 3.0
-local f1Ns = [5,10,15,20,30]
+local f1Ns = {5,10,15,20,30}
 local f1Info = {}
 for i = 1, #f1Ns do
   f1Info[f1Ns[i]] = {tp=0,fp=0,tn=0,fn=0}
