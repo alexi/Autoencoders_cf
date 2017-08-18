@@ -269,8 +269,6 @@ for kk = 1, size do
     hitTargets[i] = {}
     for ti = 1, targets[i]:size(1) do
       print(targets[i])
-      --print(targets[i][1])
-      --print(targets[i][2])
       if targets[i][ti][2] >= f1Threshold then
         hitTargets[i][targets[i][ti][1]] = true
       end
@@ -330,6 +328,8 @@ for kk = 1, size do
 
       --reset minibatch
       inputs = {}
+      hitTargets = {}
+      hiddens = {}
       i = 1
       
       -- if the ratio
