@@ -302,14 +302,14 @@ for kk = 1, size do
         local urecs = nnsparse.DynamicSparseTensor(10000)
         for ii = 1, outputs[ui]:size(1) do
           itemid = ii
-          if hiddens[ui][itemid] ~= nil then
+          if hiddens[ui][itemid] == nil then
             urecs:append(torch.Tensor{itemid, outputs[ui][ii]})
           end
         end
         urecs = urecs:build():ssort(true)
         for fi = 1, #f1Ns do
           local f1n = f1Ns[fi]
-	  -- print(hitTargets[i])
+	  -- print(urecs)
           local tp, fp, fn, tn = calculateHits(matrixSize[targetType], urecs, hitTargets[ui], f1n)
           f1Info[f1n].tp = f1Info[f1n].tp + tp
           f1Info[f1n].fp = f1Info[f1n].fp + fp
@@ -376,7 +376,7 @@ if #inputs > 0 then
     local urecs = nnsparse.DynamicSparseTensor(10000)
     for ii = 1, outputs[ui]:size(1) do
       itemid = ii
-      if hiddens[ui][itemid] ~= nil then
+      if hiddens[ui][itemid] == nil then
         urecs:append(torch.Tensor{itemid, outputs[ui][ii]})
       end
     end
