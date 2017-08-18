@@ -196,13 +196,13 @@ function computeTranposeRatio(transposeError)
 end
 
 
-function calculateHits(nTargets, itemScores, targetItems, N):
-  # print("recordHits called")
+function calculateHits(nTargets, itemScores, targetItems, N)
+  -- print("calculateHits called")
   local sumA, sumB, sumAB = 0
   for i = 1, itemScores:size(1) do
     if i <= N then
       sumA = sumA + 1
-      if targetItemScores[itemScores[i][1]] ~= nil then
+      if targetItems[itemScores[i][1]] ~= nil then
         sumAB = sumAB + 1
       end 
     else
@@ -268,8 +268,11 @@ for kk = 1, size do
 
     hitTargets[i] = {}
     for ti = 1, targets[i]:size(1) do
-      if targets[i][2] >= f1Threshold do
-        hitTargets[i][targets[i][1]] = true
+      print(targets[i])
+      --print(targets[i][1])
+      --print(targets[i][2])
+      if targets[i][ti][2] >= f1Threshold then
+        hitTargets[i][targets[i][ti][1]] = true
       end
     end
 
@@ -308,6 +311,7 @@ for kk = 1, size do
         urecs = urecs:build():ssort(true)
         for fi = 1, #f1Ns do
           local f1n = f1Ns[fi]
+	  print(hitTargets[i])
           local tp, fp, fn, tn = calculateHits(matrixSize[targetType], urecs, hitTargets[i], f1n)
           f1Info[f1n].tp = f1Info[f1n].tp + tp
           f1Info[f1n].fp = f1Info[f1n].fp + fp
@@ -430,14 +434,14 @@ function xlogx(x)
 end
 
 function llscore(tp, fp, fn, tn)
-  N = tp + fp + fn + tn
-  x = xlogx(N) - xlogx(tp+fn) - xlogx(fp+tn)
-  x += xlogx(tp) + xlogx(fp) - xlogx(tp+fp)
-  x += xlogx(fn) + xlogx(tn) - xlogx(fn+tn)
+  local N = tp + fp + fn + tn
+  local x = xlogx(N) - xlogx(tp+fn) - xlogx(fp+tn)
+  x = x + xlogx(tp) + xlogx(fp) - xlogx(tp+fp)
+  x = x + xlogx(fn) + xlogx(tn) - xlogx(fn+tn)
   x = math.sqrt(x/N)
   if tp+fp == 0.0 or fn+tn == 0.0 then
     x = 0.0
-  else if tp/(tp+fp) < fn/(fn+tn) then
+  elseif tp/(tp+fp) < fn/(fn+tn) then
     x = -x
   end
   score = math.tanh(x)
