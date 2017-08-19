@@ -100,11 +100,8 @@ function Batchifier:forward(data, batchSize)
       if #inputs == batchSize then
          local start =  cursor   *batchSize + 1
          local stop  = (cursor+1)*batchSize
-<<<<<<< HEAD
          -- if stop > outputs:size(1) then stop = outputs:size(1) end
-=======
-         if stop > #outputs then stop = #outputs end
->>>>>>> 854355dc3e1e2c287d5b443bf0aa27cff1b21a1a
+         -- if stop > #outputs then stop = #outputs end
          
          if self.appenderIn then
             self.appenderIn:prepareInput(denseInfo,sparseInfo)

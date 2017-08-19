@@ -113,6 +113,17 @@ function GetSize(X,dim)
    end
 end
 
+function GetnCols(X)
+   if torch.isTensor(X)  then 
+      return X:size(1)
+   elseif torch.type(X) == "table" then 
+      local size = 0
+      for _, _ in pairs(X) do size = size + 1 end
+      return size
+   else return nil
+   end
+end
+
 function GetnElement(X) 
    if torch.isTensor(X)  then 
       return X:nElement()
