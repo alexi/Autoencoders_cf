@@ -64,25 +64,29 @@ function Batchifier:forward(data, batchSize)
    end
       
    batchSize = batchSize or 20
-   
-   local nFrame    = 0
-   for k, _ in pairs(data) do nFrame = k end
-   nFrame = nFrame
-   
+   print(data)
+   --local nFrame    = 0
+
+   local nFrame = table.Count(data)
+
+   print(nFrame)
    --Prepare minibatch
    local inputs   = {}
    local outputs  = data[1].new(nFrame, self.outputSize) 
-   
-   local denseInfo  = data[1].new(batchSize, self.info.metaDim):zero()
+   print(outputs:size())
+   local denseInfo = {}
    local sparseInfo = {}
-   
+   if self.appenderIn then
+      denseInfo  = data[1].new(batchSize, self.info.metaDim):zero()
+   end
+
    assert(torch.type(data) == "table")
 
    local i      = 1
    local cursor = 0
    for k, input in pairs(data) do
 
-      inputs[i]  = input   
+      inputs[i]  = input
       
       if self.appenderIn then
           denseInfo[i]  = self.info[k].full
@@ -95,11 +99,13 @@ function Batchifier:forward(data, batchSize)
       if #inputs == batchSize then
          local start =  cursor   *batchSize + 1
          local stop  = (cursor+1)*batchSize
-
+         -- if stop > outputs:size(1) then stop = outputs:size(1) end
+         
          if self.appenderIn then
             self.appenderIn:prepareInput(denseInfo,sparseInfo)
          end
-         
+         print("start:" .. start .. "  stop: " .. stop)
+
          outputs[{{start,stop},{}}] = self.network:forward(inputs)
          
          inputs = {}

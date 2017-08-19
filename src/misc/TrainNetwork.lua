@@ -126,6 +126,7 @@ function TrainNetwork(train, test, info, config)
          --compute data for intermediate steps (can be improved)
          local newtrain = train
          local newtest  = test
+	 print("encoders:", encoders, "bottleneck:", bottleneck)
          for i = 1, k-1 do
          
             local batchifier = cfn.Batchifier(encoders[i], bottleneck[i], appenderIn, info)

@@ -28,7 +28,7 @@ function AutoEncoderTrainer:Train(sgdOpt, epoch)
    local network = self.network
    local lossFct = self.loss
    local train  = self.train
-
+   -- print("train nil:",  train)
    -- Retrieve parameters and gradients
    local w, dw = network:getParameters()
 
@@ -63,8 +63,9 @@ function AutoEncoderTrainer:Train(sgdOpt, epoch)
       while noPicked <= sgdOpt.miniBatchSize and cursor < noSample-1 do
 
          local shuffledIndex = shuffle[cursor]
-         
-         if train[shuffledIndex] then -- handle table that are not contiguous
+         print("shuffledIndex:", shuffledIndex, "GetnElement(train)", GetnElement(train))
+         if shuffledIndex < GetnElement(train) and train[shuffledIndex] ~= nil then 
+		-- handle table that are not contiguous
             input[noPicked] = train[shuffledIndex]
             
             if appenderIn then
