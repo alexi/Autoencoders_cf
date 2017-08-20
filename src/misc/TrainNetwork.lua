@@ -130,7 +130,7 @@ function TrainNetwork(train, test, info, config)
          -- print("encoders:", encoders, "bottleneck:", bottleneck)
          for i = 1, k-1 do
          
-            local batchifier = cfn.Batchifier(encoders[i], bottleneck[i], appenderIn, info)
+            local batchifier = cfn.Batchifier(encoders[i], bottleneck[i], appenderIn, info, sgdConf.step)
              
             newtrain = batchifier:forward(newtrain, 20)
             newtest  = batchifier:forward(newtest, 20)
