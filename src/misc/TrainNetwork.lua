@@ -52,11 +52,13 @@ function TrainNetwork(train, test, info, config)
 
       else --dense input
       
-         if appenderIn then 
-            encoders[i]:add(cfn.AppenderOut(appenderIn)) 
-         end
+         -- if appenderIn then 
+         --    encoders[i]:add(cfn.AppenderOut(appenderIn)) 
+         -- end
          
-         encoders[i]:add(nn.Linear(bottleneck[i-1] + metaDim, bottleneck[i]))
+         -- encoders[i]:add(nn.Linear(bottleneck[i-1] + metaDim, bottleneck[i]))
+         
+         encoders[i]:add(nn.Linear(bottleneck[i-1], bottleneck[i]))
       end
                
       encoders[i]:add(nn.Tanh())
@@ -64,11 +66,13 @@ function TrainNetwork(train, test, info, config)
       --DECODERS
       decoders[i] = nn.Sequential()
       
-      if appenderIn then 
+      if i == 1 and appenderIn then 
          decoders[i]:add(cfn.AppenderOut(appenderIn)) 
+         decoders[i]:add(nn.Linear(bottleneck[i] + metaDim ,bottleneck[i-1]))
+      else
+         decoders[i]:add(nn.Linear(bottleneck[i],bottleneck[i-1]))
       end
       
-      decoders[i]:add(nn.Linear(bottleneck[i] + metaDim ,bottleneck[i-1]))
       decoders[i]:add(nn.Tanh())
       
       -- tied weights
@@ -90,6 +94,7 @@ function TrainNetwork(train, test, info, config)
          local step    = noLayer-k+1
          local sgdConf = confLayer[step]
          sgdConf.name = "layer" .. noLayer .. "-" .. step 
+         sgdConf.layer = noLayer
          sgdConf.step = step
          
 
@@ -130,7 +135,7 @@ function TrainNetwork(train, test, info, config)
          -- print("encoders:", encoders, "bottleneck:", bottleneck)
          for i = 1, k-1 do
          
-            local batchifier = cfn.Batchifier(encoders[i], bottleneck[i], appenderIn, info, sgdConf.step)
+            local batchifier = cfn.Batchifier(encoders[i], bottleneck[i], appenderIn, info, sgdConf.layer, sgdConf.step)
              
             newtrain = batchifier:forward(newtrain, 20)
             newtest  = batchifier:forward(newtest, 20)

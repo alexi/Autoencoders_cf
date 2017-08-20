@@ -67,12 +67,10 @@ function Batchifier:forward(data, batchSize)
    end
       
    batchSize = batchSize or 20
-   print(data)
    --local nFrame    = 0
 
    local nFrame = table.Count(data)
 
-   print(nFrame)
    --Prepare minibatch
    local inputs   = {}
    local outputs  = data[1].new(nFrame, self.outputSize) 
