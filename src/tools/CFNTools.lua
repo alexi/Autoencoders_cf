@@ -46,7 +46,7 @@ function Batchifier:forward(data, batchSize)
    
    local hasAppenderIn = false
    if self.appenderIn then hasAppenderIn = true end
-   print("appenderIn: " .. hasAppenderIn .. "\nstep: " .. self.step .. "\ntorch.isTensor(data): " .. torch.isTensor(data))
+   print("appenderIn: " .. tostring(hasAppenderIn) .. "\nstep: " .. self.step .. "\ntorch.isTensor(data): " .. tostring(torch.isTensor(data)))
    -- no need for batch for dense Tensor
    if torch.isTensor(data) then
       if self.appenderIn then
