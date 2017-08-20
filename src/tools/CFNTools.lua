@@ -34,18 +34,21 @@ end
 
 local Batchifier, parent = torch.class('cfn.Batchifier')
 
-function Batchifier:__init(network, outputSize, appenderIn, info)
+function Batchifier:__init(network, outputSize, appenderIn, info, step)
    self.network    = network
    self.outputSize = outputSize
    self.appenderIn = appenderIn
    self.info = info
+   self.step = step
 end
 
 function Batchifier:forward(data, batchSize)
    
+   local hasAppenderIn = false
+   if self.appenderIn then hasAppenderIn = true end
+   print("appenderIn: " .. hasAppenderIn .. "\nstep: " .. self.step .. "\ntorch.isTensor(data): " .. torch.isTensor(data))
    -- no need for batch for dense Tensor
    if torch.isTensor(data) then
-   
       if self.appenderIn then
          local denseInfo  = data[1].new(self.info.size, self.info.metaDim):zero()
          for k = 1, data:size(1) do
@@ -106,7 +109,7 @@ function Batchifier:forward(data, batchSize)
          if self.appenderIn then
             self.appenderIn:prepareInput(denseInfo,sparseInfo)
          end
-         print("start:" .. start .. "  stop: " .. stop)
+         -- print("start:" .. start .. "  stop: " .. stop)
 
          outputs[{{start,stop},{}}] = self.network:forward(inputs)
          

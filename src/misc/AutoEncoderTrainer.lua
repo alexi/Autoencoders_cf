@@ -245,7 +245,7 @@ function  AutoEncoderTrainer:Test(sgdOpt)
    else
    
       local lossFct    = nn.MSECriterion()
-      local batchifier = cfn.Batchifier(network, nil, appenderIn, self.info)
+      local batchifier = cfn.Batchifier(network, nil, appenderIn, self.info, sgdOpt.step)
       local output = batchifier:forward(test)
      
       loss = lossFct:forward(output, test)
