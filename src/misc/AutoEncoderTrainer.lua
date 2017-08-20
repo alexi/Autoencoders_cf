@@ -63,8 +63,10 @@ function AutoEncoderTrainer:Train(sgdOpt, epoch)
       while noPicked <= sgdOpt.miniBatchSize and cursor < noSample-1 do
 
          local shuffledIndex = shuffle[cursor]
-	local nelem = GetnCols(train)
-	if nelem > 6000 then print(train) end
+
+         local nelem = GetnCols(train)
+
+	-- if nelem > 6000 then print(train) end
          --print("shuffledIndex:", shuffledIndex, "GetnElement(train)", nelem)
          if shuffledIndex < nelem and train[shuffledIndex] ~= nil then 
 		-- handle table that are not contiguous
