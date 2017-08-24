@@ -72,7 +72,7 @@ function TrainNetwork(train, test, info, config)
       else
          decoders[i]:add(nn.Linear(bottleneck[i],bottleneck[i-1]))
       end
-      
+
       decoders[i]:add(nn.Tanh())
       
       -- tied weights
@@ -110,6 +110,7 @@ function TrainNetwork(train, test, info, config)
          network = cfn.FlatNetwork(network)
 
          if config.use_gpu then
+            network = makeDataParallel(network, config.num_gpu)
             network:cuda()
             sgdConf.criterion:cuda()
          end

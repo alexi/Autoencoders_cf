@@ -73,7 +73,12 @@ function Batchifier:forward(data, batchSize)
 
    --Prepare minibatch
    local inputs   = {}
-   local outputs  = data[1].new(nFrame, self.outputSize) 
+   local outputs = {}
+   for k, v in pairs(data) do
+      outputs = v.new(nFrame, self.outputSize)
+      break
+   end
+   -- local outputs  = data[math.random( #data )].new(nFrame, self.outputSize) 
 
    print(outputs:size())
    local denseInfo = {}

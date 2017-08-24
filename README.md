@@ -31,20 +31,24 @@ cd data
 wget http://files.grouplens.org/datasets/movielens/ml-10m.zip
 unzip ml-10m.zip 
 cd ../src
-th data.lua  -ratings ../data/ml-10M100K/ratings.dat -metaItem ../data/ml-10M100K/movies.dat -out ../data/ml-10M100K/movieLens-10M.t7 -fileType movieLens -ratio 0.9
-th main.lua  -file ../data/ml-10M100K/movieLens-10M.t7 -conf ../conf/conf.movieLens.10M.V.lua  -save network.t7 -type V -meta 1 -gpu 1
-th computeMetrics.lua -file ../data/ml-10M100K/movieLens-10M.t7 -network network.t7 -type V -gpu 1
+th data.lua  -ratings ../data/ml-10M100K/ratings.dat -out ../data/ml-10M100K/movieLens-10M.t7 -fileType movieLens -ratio 0.8 -split time
+th main.lua  -file ../data/ml-10M100K/movieLens-10M.t7 -conf ../conf/conf.movieLens.10M.U_2.lua  -save network10M.t7 -type U -meta 0 -gpu 8
+th computeMetricsV2.lua -file ../data/ml-10M100K/movieLens-10M.t7 -network network10M.t7 -type U -gpu 1
 ```
 
 For 1M
 ```
+cd ~/Autoencoders_cf/
+git config --global user.email "alexi@tamber.com"
+git stash
+git pull
 cd data
 wget http://files.grouplens.org/datasets/movielens/ml-1m.zip
 unzip ml-1m.zip 
 cd ../src
-th data.lua  -ratings ../data/ml-1m/ratings.dat -metaItem ../data/ml-1m/movies.dat -out ../data/ml-1m/movieLens-1M.t7 -fileType movieLens -ratio 0.9
-th main.lua  -file ../data/ml-1m/movieLens-1M.t7 -conf ../conf/conf.movieLens.1M.V.lua  -save network.t7 -type V -meta 0 -gpu 1
-th computeMetrics.lua -file ../data/ml-1m/movieLens-1M.t7 -network network.t7 -type V -gpu 1
+th data.lua  -ratings ../data/ml-1m/ratings.dat -metaItem ../data/ml-1m/movies.dat -out ../data/ml-1m/movieLens-1M.t7 -fileType movieLens -ratio 0.8 -split time
+th main.lua  -file ../data/ml-1m/movieLens-1M.t7 -conf ../conf/conf.movieLens.1M.U.lua  -save network.t7 -type U -meta 1 -gpu 1
+th computeMetricsV2.lua -file ../data/ml-1m/movieLens-1M.t7 -network network.t7 -type U -gpu 1
 ```
 
 Your network is ready!

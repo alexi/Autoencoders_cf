@@ -2,7 +2,6 @@ local AutoEncoderTrainer = torch.class('AutoEncoderTrainer')
 
 function AutoEncoderTrainer:__init(network, conf, train, test, info)
 
-
    self.network  = network
    self.loss     = conf.criterion
    self.train    = train
@@ -256,8 +255,6 @@ function  AutoEncoderTrainer:Test(sgdOpt)
 end
 
 
-
-
 function AutoEncoderTrainer:Execute(sgdOpt)
 
    local noEpoch = sgdOpt.noEpoch
@@ -290,9 +287,5 @@ function AutoEncoderTrainer:Execute(sgdOpt)
    return self.rmse, self.mae
 
 end
-
-
-
-
 
 

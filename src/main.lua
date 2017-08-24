@@ -5,7 +5,7 @@ require("optim")
 require("xlua") 
 
 torch.setdefaulttensortype('torch.FloatTensor') 
-
+require 'cutorch'
 require("nnsparse")
 
 dofile("misc/Preload.lua")
@@ -17,6 +17,7 @@ dofile("tools/Appender.lua")
 dofile("tools/SDAECriterionGPU.lua")
 dofile("tools/CFNTools.lua")
 dofile("tools/LuaTools.lua")
+dofile("tools/Parallel.lua")
 
 ----------------------------------------------------------------------
 -- parse command-line options
@@ -59,7 +60,7 @@ local config = dofile(params.conf)
 --Append command line configuration
 config.use_meta       = params.meta > 0
 config.use_gpu        = params.gpu  > 0
-
+config.num_gpu		  = params.gpu
 
 
 print("Load data...")
