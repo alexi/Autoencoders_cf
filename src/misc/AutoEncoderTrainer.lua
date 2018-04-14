@@ -123,7 +123,7 @@ function AutoEncoderTrainer:Train(sgdOpt, epoch)
       end
 
       optim.sgd (feval, w, sgdOpt )
-
+      cutorch.synchronize()
    end
 
 
