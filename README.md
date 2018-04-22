@@ -145,6 +145,7 @@ dataset.txt.train
 dataset.txt.test
 th data.lua -ratings [fileName] -metaUser [userFileName].txt -metaItem [itemFileName].txt
 ```
+
 Please use the following format for the side information datasets: 
  - user side info : ```[idUser] [noInfo] [idUserInfo]:[value] [idUserInfo]:[value] ...```
  - user item info : ```[idItem] [noInfo] [idItemInfo]:[value] [idItemInfo]:[value] ...```

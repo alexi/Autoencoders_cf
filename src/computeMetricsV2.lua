@@ -46,7 +46,7 @@ local ratioStep = params.ratioStep
 params.loadFull = true
 --Load data
 print("Loading data...")
-local train, test, info, matrixSize, lookupTable = LoadData(params.file, params)
+local train, test, info, matrixSize, lookup = LoadData(params.file, params)
 
 targetType = "U"
 if params.type == "U" then 
@@ -186,8 +186,7 @@ function computeTranposeRatio(transposeError)
            curRatio = curRatio + ratioStep 
            rmseInterval = 0
            noSampleInterval = 0
-      end 
-      
+      end    
    end
    
    rmse = math.sqrt(rmse/noSample) * 2 
@@ -247,10 +246,18 @@ local sparseMetadata = {}
 ------------MAIN!!!
 local reverseIndex = {}
 local usersSkipped = 0
+local targetK = lookup.U[uid]
+local targetUserIndex = -1
+local tuMean = 0
+
 --for k, input in pairs(train) do
 for kk = 1, size do
   local k = sortedIndex[kk]
 
+  if k == targetK then
+    targetUserIndex = i
+    tuMean = info[k].mean
+  end
   -- Focus on the prediction aspect
   local input  = train[k]
   local target = test[k]
@@ -312,6 +319,29 @@ for kk = 1, size do
           end
         end
         urecs = urecs:build():ssort(true)
+        if ui == targetUserIndex then
+          -- recs
+          print( ui .."recs: ")
+          for i = 1, urecs:size(1) do
+            if i <= 20 then
+              print("item:" .. urecs[i][1] .. " score:" .. urecs[i][2])
+            else
+              break
+            end
+          end
+          -- inputs
+           print("inputs: ")
+          for i = 1, input:size(1) do
+            print("item:" .. input[i][1] .. " score:" .. input[i][2])
+          end
+          -- outputs
+          print("outputs: ")
+          for i = 1, target:size(1) do
+            print("item:" .. target[i][1] .. " score:" .. target[i][2])
+          end
+          print("user mean: " .. tuMean)
+          targetUserIndex = -1
+        end
         for fi = 1, #f1Ns do
           local f1n = f1Ns[fi]
 	  -- print(urecs)

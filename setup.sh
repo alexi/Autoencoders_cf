@@ -1,12 +1,17 @@
 #!/bin/bash
 # Upgrade ubuntu
-sudo apt-get -y update upgrade dist-upgrade autoremove clean
+sudo apt-get -y update 
+sudo apt-get -y upgrade dist-upgrade autoremove clean
+sudo apt-get install cmake
 
 # Install CUDA
 sudo apt-get install -y build-essential
 sudo apt-get -y update
+sudo apt-get install libreadline-dev
 sudo apt-get install -y linux-generic
+sudo apt-get install -y protobuf-compiler
 sudo apt-get install -y libprotobuf-dev  # needed for loadcaffe
+sudo apt-get install -y unzip
 mkdir libraries
 cd libraries
 
@@ -19,7 +24,7 @@ wget http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/$
 sudo apt-get -y update
 sudo apt-get install -y cuda
 echo "export PATH=/usr/local/cuda/bin/:\$PATH; export LD_LIBRARY_PATH=/usr/local/cuda/lib64/:\$LD_LIBRARY_PATH; " >>~/.bashrc && source ~/.bashrc
-rm -y $CUDA_REPO_PKG
+rm -rf $CUDA_REPO_PKG
 
 # Reboot the machine and verify that CUDA is running
 # reboot
@@ -38,8 +43,9 @@ sudo cp cuda/lib64/*.so* /usr/local/cuda/lib64
 rm cudnn-8.0-linux-x64-v7.tgz 
 
 # Install Torch -- http://torch.ch/docs/getting-started.html
-git clone https://github.com/torch/distro.git ~/torch --recursive
-cd ~/torch
+git clone https://github.com/torch/distro.git ./torch --recursive
+cd torch
+export TORCH_NVCC_FLAGS="-D__CUDA_NO_HALF_OPERATORS__"
 TORCH_LUA_VERSION=LUA52 ./install.sh
 source ~/.bashrc # not needed?
 
@@ -51,14 +57,14 @@ source ~/.bashrc # not needed?
 # Install all reqd torch packages
 luarocks install cutorch # CUDA support for torch
  # CUDA neural net?
-luarocks install cunn
+# luarocks install cunn
 luarocks install hdf5
 luarocks install cudnn
 luarocks install loadcaffe
 
 #torch/nn
 luarocks install nn #installed with torch, not needed?
-luarocks install nnsparse
+luarocks install nnsparse # Error: Failed unpacking rock file: /tmp/luarocks_luarocks-rock-nnsparse-1.1-1-564/nnsparse-1.1-1.src.rock
 luarocks install optim
 
 #xlua

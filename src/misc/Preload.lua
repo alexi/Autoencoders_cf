@@ -30,6 +30,7 @@ function LoadData(file, params)
    if use_gpu then
       print("Loading cunn...")
       require("cunn")
+      require("cutorch")
 
 
       if params.seed and params.seed > 0 then
@@ -74,7 +75,7 @@ function LoadData(file, params)
 
    print("Unbias the data...")
 
-   if type == "U" then -- unbias V
+   if type == "U" then -- unbias U
       for k, u in pairs(train) do
          info[k]      = info[k]      or {}     
          info[k].mean = info[k].mean or u[{{}, 2}]:mean()

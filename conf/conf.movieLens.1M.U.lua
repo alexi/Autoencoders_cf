@@ -17,7 +17,6 @@ config =
          learningRateDecay = 0.17623840298814,
          weightDecay = 0.025113243590272,
       },
-      
    },
    
    layer2 = 

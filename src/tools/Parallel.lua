@@ -1,4 +1,4 @@
-require 'cunn'
+-- require 'cunn'
 local ffi=require 'ffi'
 
 -- Code taken from https://github.com/soumith/imagenet-multiGPU.torch/blob/master/util.lua
