@@ -33,7 +33,7 @@ function DataLoader:LoadData(ratioTraining, conf)
    self:LoadMetaV(conf)
    
    print("Step 5 : Saving data in torch format...")
-   lookup = {U = self.userHash, V = self.itemHash}
+   lookup = {U = self.userHash, V = self.itemHash, UID = self.userIndexNames, IID = self.itemIndexNames}
    local data = {train = self.train, test = self.test, lookup=lookup}
    torch.save(conf.out, data)
 
@@ -156,12 +156,14 @@ end
 
 function DataLoader:getUserIndex(userId)
    self.userHash    =  self.userHash    or {}
+   self.userIndexNames = self.userIndexNames or {}
    self.userCounter =  self.userCounter or 1
 
    local userIndex = self.userHash[userId]
    if userIndex == nil then
       self.userHash[userId] = self.userCounter
       userIndex             = self.userCounter
+      self.userIndexNames[userIndex] = userId
       self.userCounter      = self.userCounter + 1
    end
 
@@ -170,12 +172,14 @@ end
 
 function DataLoader:getItemIndex(itemId)
    self.itemHash    = self.itemHash    or {}
+   self.itemIndexNames = self.itemIndexNames or {}
    self.itemCounter = self.itemCounter or 1
 
    local itemIndex = self.itemHash[itemId]
    if itemIndex == nil then
       self.itemHash[itemId] = self.itemCounter
       itemIndex             = self.itemCounter
+      self.itemIndexNames[itemIndex] = itemId
       self.itemCounter      = self.itemCounter + 1
    end
 

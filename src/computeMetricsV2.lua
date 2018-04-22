@@ -246,7 +246,9 @@ local sparseMetadata = {}
 ------------MAIN!!!
 local reverseIndex = {}
 local usersSkipped = 0
-local targetK = lookup.U[uid]
+
+local targetUser = 3
+local targetK = lookup.U[targetUser]
 local targetUserIndex = -1
 local tuMean = 0
 
@@ -254,7 +256,7 @@ local tuMean = 0
 for kk = 1, size do
   local k = sortedIndex[kk]
 
-  if k == targetK then
+  if kk == targetK then
     targetUserIndex = i
     tuMean = info[k].mean
   end
@@ -324,20 +326,20 @@ for kk = 1, size do
           print( ui .."recs: ")
           for i = 1, urecs:size(1) do
             if i <= 20 then
-              print("item:" .. urecs[i][1] .. " score:" .. urecs[i][2])
+              print("item:" .. lookup.IID[urecs[i][1]] .. " score:" .. urecs[i][2])
             else
               break
             end
           end
           -- inputs
-           print("inputs: ")
+           print("inputs: " .. input:size(2))
           for i = 1, input:size(1) do
-            print("item:" .. input[i][1] .. " score:" .. input[i][2])
+            print("item:" .. lookup.IID[input[i][1]] .. " score:" .. input[i][2])
           end
           -- outputs
-          print("outputs: ")
+          print("outputs: " .. target:size(1))
           for i = 1, target:size(1) do
-            print("item:" .. target[i][1] .. " score:" .. target[i][2])
+            print("item:" .. lookup.IID[target[i][1]] .. " score:" .. target[i][2])
           end
           print("user mean: " .. tuMean)
           targetUserIndex = -1
