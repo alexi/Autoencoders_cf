@@ -247,7 +247,7 @@ local sparseMetadata = {}
 local reverseIndex = {}
 local usersSkipped = 0
 
-local targetUser = 3
+local targetUser = 2
 local targetK = lookup.U[targetUser]
 local targetUserIndex = -1
 local tuMean = 0
